@@ -1,0 +1,9 @@
+FROM golang:latest AS build
+
+WORKDIR /app
+COPY . .
+RUN GOOS=linux CGO_ENABLED=0 go build -ldflags="-w -s" -o fullcycle ./cmd/app/main.go
+
+FROM scratch
+COPY --from=build /app/fullcycle .
+CMD ["./fullcycle"]
